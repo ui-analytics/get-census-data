@@ -5,9 +5,12 @@ import polars as pl
 class CensusData():
     
     def __init__(self,years,state_code,dataset_path,
-                 key_fields,api_key,
-                 base_url='http://api.census.gov/data',chunk_size=48, 
-                 variable_export_list=[],exclude_variables=None,
+                 api_key,
+                 base_url='http://api.census.gov/data',
+                 key_fields=[],
+                 chunk_size=48, 
+                 variable_export_list=[],
+                 exclude_variables=None,
                  output_folder='output'):
         self.years = years
         self.state_code = str(state_code)
@@ -51,7 +54,15 @@ class CensusData():
                 
                 if self.dataset:
                     self.dataset = self.dataset[0]
-                    self.data = pl.concat(self.get_data(year),how='align')
+                    if self.key_fields:
+                        self.data = pl.concat(self.get_data(year),how='align')
+                    else:
+                        data_list = []
+                        for i,df in enumerate(self.get_data(year)):
+                            if i > 0:
+                                df = df.drop(['state'])
+                            data_list.append(df)
+                            self.data = pl.concat(data_list,how='horizontal')
             else:
                 self.data = None
                 
