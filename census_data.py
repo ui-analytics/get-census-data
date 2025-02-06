@@ -88,9 +88,6 @@ class CensusData():
         access_url = f"{self.api_url}/{year}/{self.dataset_path}"
         data_json = CensusData.get_response_json(access_url,params=params)
         df = pl.DataFrame(data_json[1:],schema=data_json[0], orient='row')
-        df = df.with_columns(
-                pl.concat_str(['SERIALNO','SPORDER'],separator='_').alias('UNIQUE_KEY')
-            )
         return df
     
     def set_parameters(self,variable_list):
