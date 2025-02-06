@@ -12,7 +12,8 @@ This Python code will allow you to download Census data through the API url at [
 * **api_key**: This is the key provide by the Census when you request a key at [https://api.census.gov/data/key_signup.html](https://api.census.gov/data/key_signup.html).
 * **variable_export_list**: By default this is set to **None**, meaning it will get all the variables listed in the **variables.json** file linked to each year and dataset in the API.  If you are interested in only a subset of variables you can add it to this parameter in the format **['VARIABLE_1','VARIABLE_2',...VARIABLE_N]**.
 * **exclude_variables**: There is JSON file called **exclude_variables.json** which is organized by the dataset path and further by year and it contains a list of variables that should be excluded from the requests related to the dataset and time period because they are not available and generate an error.  As new cases are found they will be added to this file.
-![alt text](img/exclude_variables.png)
+  
+  ![alt text](img/exclude_variables.png)
 
 ## How it Works
 The code will loop through the provided year list and create a variable list based on if there are variables provided by the user or if all the variables in the associated year and datasets variables.json will be exported.  The variable list will exclude any exclude_variables that are found for the year and dataset specified.  Since the API only allows at most 50 variable to be made to an API request the variable list into broken out into chunks of 50 variables.  Each chuck will also include the key fields that are passed.  The key fields are needed to concatenate all the API results for each chunk into one main dataset.
