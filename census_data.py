@@ -11,7 +11,8 @@ class CensusData():
                  chunk_size=48, 
                  variable_export_list=[],
                  exclude_variables=None,
-                 output_folder='output'):
+                 output_folder='output',
+                 _for=None):
         self.years = years
         self.state_code = str(state_code)
         self.dataset_path = dataset_path
@@ -24,6 +25,7 @@ class CensusData():
         self.exclude_variables = exclude_variables
         self.always_exclude_variables = ['for','in','ucgid']
         self.output_folder = output_folder
+        self._for = _for
     
     def get_census_data(self):
 
@@ -102,11 +104,16 @@ class CensusData():
         return df
     
     def set_parameters(self,variable_list):
-        return {
+        params = {
             "get": ",".join(variable_list),
-            "for": f"state:{self.state_code}",
+            "for":f"state:{self.state_code}",
             "key": self.api_key
             }
+        # if _for is populated set in parameter with the state
+        if self._for:
+            params["for"] = self._for
+            params['in'] = f"state:{self.state_code}"
+        return params
         
     @staticmethod
     def set_year_range(start,end=None,exclude_years=[]):
